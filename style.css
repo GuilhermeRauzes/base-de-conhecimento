@@ -1,0 +1,159 @@
+:root {
+  --bg-dark: #0b0f19;
+  --bg-panel: rgba(11, 15, 25, 0.85); /* Mais escuro para não vazar a grade pelo card */
+  --border-color: rgba(255, 255, 255, 0.15);
+  --text-primary: #ffffff;
+  --text-secondary: #f1f5f9;
+  --accent-blue: #3b82f6;
+  --accent-hover: #2563eb;
+  --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  font-family: var(--font-main);
+  line-height: 1.6;
+  overflow: hidden; /* Removemos a rolagem do body... */
+}
+
+.navbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1rem 5%; border-bottom: 1px solid var(--border-color);
+  background: rgba(11, 15, 25, 0.95); backdrop-filter: blur(12px);
+  position: relative; z-index: 1000; height: 70px;
+}
+
+.logo { display: flex; align-items: center; gap: 0.5rem; font-size: 1.25rem; font-weight: 600; color: var(--text-primary); }
+.logo i { color: var(--accent-blue); font-size: 1.5rem; }
+.nav-actions { display: flex; gap: 1rem; }
+
+.admin-only { display: none !important; }
+body.is-admin .admin-only { display: flex !important; }
+body.is-admin #btn-login { display: none !important; }
+
+.btn {
+  padding: 0.5rem 1rem; border-radius: 6px; font-weight: 500; cursor: pointer;
+  transition: all 0.2s ease; display: inline-flex; align-items: center;
+  justify-content: center; gap: 0.5rem; font-size: 0.9rem; border: none;
+}
+.btn-primary { background: var(--accent-blue); color: white; }
+.btn-primary:hover { background: var(--accent-hover); box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
+.btn-outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); }
+.btn-outline:hover { background: rgba(255, 255, 255, 0.1); }
+.w-100 { width: 100%; margin-top: 1rem;}
+.hidden { display: none !important; }
+
+/* ======== CANVAS FREEFLOW ======== */
+.canvas-board {
+  position: relative;
+  width: 100vw;
+  height: calc(100vh - 70px); /* Ocupa o resto da tela abaixo do navbar */
+  overflow: auto; /* ...e colocamos a rolagem no Canvas! */
+
+  /* Grid Blueprint no Canvas */
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-attachment: local; /* O grid rola junto com os cards */
+}
+
+/* Configuração do Card no modo Freeflow */
+.card {
+  position: absolute; /* O Segredo do Canvas! */
+  width: 450px; /* Largura fixa para os cards no mapa mental */
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  display: flex; flex-direction: column;
+  transition: border-color 0.2s ease;
+  z-index: 10;
+}
+.card:hover { border-color: rgba(59, 130, 246, 0.5); z-index: 20; }
+.card.dragging { opacity: 0.8; z-index: 999; box-shadow: 0 15px 40px rgba(0,0,0,0.5); border-color: var(--accent-blue); cursor: grabbing !important; }
+
+.card-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.2rem 1.5rem; border-bottom: 1px solid transparent; 
+  transition: border-bottom 0.3s ease;
+}
+
+.drag-handle {
+  cursor: grab; color: var(--text-secondary); font-size: 1.5rem;
+  margin-right: 0.5rem; padding: 0.2rem; display: flex; align-items: center;
+}
+.drag-handle:active { cursor: grabbing; color: var(--text-primary); }
+
+.card-toggle { font-size: 1.2rem; cursor: pointer; color: var(--accent-blue); transition: transform 0.3s ease; margin-right: 10px; }
+.card h3 { color: var(--text-primary); font-size: 1.2rem; margin: 0; user-select: none; }
+.header-left { display: flex; align-items: center; }
+
+/* Ocultar Corpo do Card */
+.card-body { padding: 0 1.5rem 1.5rem 1.5rem; display: block; }
+.card.collapsed .card-body { display: none; }
+.card.collapsed .card-header { border-bottom: none; }
+.card.collapsed .card-toggle { transform: rotate(-90deg); }
+.card:not(.collapsed) .card-header { border-bottom: 1px solid var(--border-color); }
+
+.card-actions { display: flex; gap: 0.5rem; }
+.btn-icon { background: transparent; border: none; color: var(--text-secondary); font-size: 1.2rem; cursor: pointer; transition: color 0.2s; padding: 0.2rem; }
+.btn-icon:hover { color: var(--text-primary); }
+.btn-icon.delete:hover { color: #ef4444; }
+
+.card-links {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  background: rgba(59, 130, 246, 0.05); border-left: 3px solid var(--accent-blue);
+  padding: 1rem; border-radius: 4px 6px 6px 4px; margin-bottom: 1.5rem; margin-top: 1rem;
+}
+.card-links a {
+  display: inline-flex; align-items: center; gap: 6px; color: #60a5fa; text-decoration: none;
+  font-size: 0.9rem; font-weight: 500; background: rgba(59, 130, 246, 0.15); padding: 6px 12px; border-radius: 6px; transition: all 0.2s;
+}
+.card-links a:hover { background: rgba(59, 130, 246, 0.25); color: #93c5fd; }
+
+.card-content {
+  color: var(--text-secondary); font-size: 0.95rem; text-align: justify; line-height: 1.7;
+  max-height: 350px; overflow-y: auto; padding-right: 10px; margin-top: 1rem;
+}
+
+/* Modals & Inputs */
+.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+.glass-panel { background: #111827; border: 1px solid var(--border-color); border-radius: 12px; padding: 2.5rem; width: 100%; max-width: 450px; position: relative; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); max-height: 90vh; overflow-y: auto; }
+.modal-large { max-width: 800px; }
+.glass-panel::-webkit-scrollbar, .card-content::-webkit-scrollbar, .canvas-board::-webkit-scrollbar { width: 8px; height: 8px; }
+.glass-panel::-webkit-scrollbar-track, .card-content::-webkit-scrollbar-track, .canvas-board::-webkit-scrollbar-track { background: transparent; }
+.glass-panel::-webkit-scrollbar-thumb, .card-content::-webkit-scrollbar-thumb, .canvas-board::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+.close-modal { position: absolute; top: 1rem; right: 1.5rem; font-size: 1.5rem; color: var(--text-secondary); cursor: pointer; }
+.close-modal:hover { color: white; }
+
+.input-group { margin-bottom: 1.2rem; }
+.input-group label { display: block; margin-bottom: 0.5rem; color: var(--text-secondary); font-size: 0.9rem; font-weight: 500; }
+.input-group input { width: 100%; padding: 0.85rem; border-radius: 8px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); color: white; font-family: inherit; font-size: 0.95rem; transition: border-color 0.2s; }
+.input-group input:focus { outline: none; border-color: var(--accent-blue); }
+
+.link-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+.link-row input { flex: 1; padding: 0.6rem; font-size: 0.9rem; }
+.btn-remove-link { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; cursor: pointer; padding: 0 0.8rem; transition: all 0.2s; }
+.btn-remove-link:hover { background: #ef4444; color: white; }
+
+.ql-toolbar.ql-snow { border-color: var(--border-color) !important; background: rgba(255,255,255,0.05); border-radius: 8px 8px 0 0; }
+.ql-container.ql-snow { border-color: var(--border-color) !important; border-radius: 0 0 8px 8px; background: rgba(0,0,0,0.4); }
+#editor-container { min-height: 200px; color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-main); }
+.ql-snow .ql-stroke { stroke: var(--text-secondary) !important; }
+.ql-snow .ql-fill { fill: var(--text-secondary) !important; }
+.ql-snow .ql-picker { color: var(--text-secondary) !important; }
+
+/* Toasts */
+.toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
+.toast { background: #1e293b; color: white; padding: 1rem 1.5rem; border-radius: 8px; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-left: 4px solid var(--accent-blue); animation: slideIn 0.3s ease forwards; font-size: 0.95rem; }
+.toast.success { border-left-color: #10b981; }
+.toast.success i { color: #10b981; }
+.toast.error { border-left-color: #ef4444; }
+.toast.error i { color: #ef4444; }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
