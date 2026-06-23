@@ -24,8 +24,3 @@ Construída sob uma arquitetura *Serverless* e operando como um **Canvas Freeflo
 * **Dependências Externas:** * [Quill.js](https://quilljs.com/) (Editor de Texto)
   * [Phosphor Icons](https://phosphoricons.com/) (Iconografia UI)
 
-## 🚀 Como Rodar Localmente
-
-1. Clone este repositório:
-   ```bash
-   git clone [https://github.com/guilhermerauzes/seu-repositorio.git](https://github.com/guilhermerauzes/seu-repositorio.git)
